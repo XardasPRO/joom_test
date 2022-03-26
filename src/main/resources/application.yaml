@@ -1,0 +1,25 @@
+
+spring:
+  security:
+    token-lifetime: 86400
+    cookie-name: calendarAuthCookie
+    cookie-token-signing-key: secretkeyforsubscribeauthtoken
+  datasource:
+    url: jdbc:postgresql://192.168.1.100:7689/postgres
+    username: postgres
+    password: postgres
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        default_schema: calendar
+        jdbc:
+          time_zone: UTC
+    flyway:
+      schemas: calendar
+    jackson:
+      serialization:
+        fail-on-empty-beans: false
+      mapper:
+        accept-case-insensitive-enums: true
