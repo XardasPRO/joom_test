@@ -29,6 +29,8 @@ dependencies {
 	implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 	implementation("io.jsonwebtoken:jjwt:0.9.1")
 	implementation("io.springfox:springfox-oas:3.0.0")
+	implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.13.2")
+	implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.13.2")
 
 	runtimeOnly("org.postgresql:postgresql")
 

@@ -1,11 +1,12 @@
 package com.joom.calendar.calendar.model.user
 
 import com.joom.calendar.calendar.model.BaseEntity
+import com.joom.calendar.calendar.model.schedule.Schedule
 import java.util.*
 import javax.persistence.*
 
 @Entity
-@Table(name = "users", schema = "public")
+@Table(name = "users")
 class User(
     id: UUID = UUID.randomUUID(),
     val name: String,
@@ -13,11 +14,18 @@ class User(
     val login: String,
     val password: String,
     val email: String?,
-    val timezone: Short,
+    val zoneOffset: String,
     val isEnabled: Boolean,
     @OneToMany(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
-    val authorities: Set<UserAuthority>
+    val authorities: Set<UserAuthority> = emptySet(),
+    @OneToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+        name = "user_working_schedule",
+        joinColumns = [JoinColumn(name = "user_id")],
+        inverseJoinColumns = [JoinColumn(name = "schedule_id")]
+    )
+    val schedule: Set<Schedule> = emptySet()
 ) : BaseEntity(id) {
 
     fun copy(
@@ -27,12 +35,13 @@ class User(
         login: String = this.login,
         password: String = this.password,
         email: String? = this.email,
-        timezone: Short = this.timezone,
+        zoneOffset: String = this.zoneOffset,
         isEnabled: Boolean = this.isEnabled,
-        authorities: Set<UserAuthority> = this.authorities
+        authorities: Set<UserAuthority> = this.authorities,
+        schedule: Set<Schedule> = this.schedule
     ): User {
         return User(
-            id, name, surname, login, password, email, timezone, isEnabled, authorities
+            id, name, surname, login, password, email, zoneOffset, isEnabled, authorities, schedule
         )
     }
 }

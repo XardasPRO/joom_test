@@ -14,8 +14,8 @@ class CreateUserRequest(
     val password: String,
     @field:Schema(description = "User email")
     val email: String?,
-    @field:Schema(description = "User timezone")
-    val timezone: Short,
+    @field:Schema(description = "User timezone offset from UTC")
+    val zoneOffset: String,
     @field:Schema(description = "User authorities")
     val authorities: Set<String>
 ) {
@@ -25,9 +25,9 @@ class CreateUserRequest(
         login: String = this.login,
         password: String = this.password,
         email: String? = this.email,
-        timezone: Short = this.timezone,
+        zoneOffset: String = this.zoneOffset,
         authorities: Set<String> = this.authorities
     ): CreateUserRequest {
-        return CreateUserRequest(name, surname, login, password, email, timezone, authorities)
+        return CreateUserRequest(name, surname, login, password, email, zoneOffset, authorities)
     }
 }

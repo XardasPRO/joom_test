@@ -1,8 +1,16 @@
 package com.joom.calendar.calendar.util
 
+import com.joom.calendar.calendar.model.schedule.Schedule
+import com.joom.calendar.calendar.model.schedule.ScheduleType
 import com.joom.calendar.calendar.model.user.User
 import com.joom.calendar.calendar.model.user.UserAuthority
+import com.joom.calendar.calendar.model.user.UserWorkingSchedule
 import com.joom.calendar.calendar.rest.dto.request.CreateUserRequest
+import com.joom.calendar.calendar.rest.dto.request.UpdateUserScheduleRequest
+import com.joom.calendar.calendar.rest.dto.schedule.ScheduleDto
+import java.time.LocalDateTime
+import java.time.ZoneId
+import java.time.ZonedDateTime
 import java.util.*
 
 class TestObjectFactory {
@@ -15,9 +23,10 @@ class TestObjectFactory {
                 login = "testUserLogin",
                 password = "testUserPassword",
                 email = "test@user.mail",
-                timezone = 0,
+                zoneOffset = "+00:00",
                 isEnabled = true,
-                authorities = emptySet()
+                authorities = emptySet(),
+                schedule = emptySet()
             )
             return user.copy(authorities = setOf(createUserAuthority("testAuthority", user)))
         }
@@ -37,8 +46,52 @@ class TestObjectFactory {
                 login = "testUserLogin",
                 password = "testUserPassword",
                 email = "test@user.mail",
-                timezone = 0,
+                zoneOffset = "+00:00",
                 authorities = setOf("testAuthority")
+            )
+        }
+
+        fun createScheduleDto(): ScheduleDto {
+            return ScheduleDto(
+                type = "DATE",
+                startDateTime = LocalDateTime.now(),
+                duration = 3600,
+                false
+            )
+        }
+
+        fun createUpdateUserScheduleRequest(): UpdateUserScheduleRequest {
+            return UpdateUserScheduleRequest(
+                userId = UUID.randomUUID(),
+                zoneOffset = "+00:00",
+                schedule = setOf(
+                    createScheduleDto().copy(
+                        type = "WORKDAYS",
+                        startDateTime = LocalDateTime.of(2020, 1, 1, 8, 0),
+                        duration = 14400
+                    ),
+                    createScheduleDto().copy(
+                        type = "WORKDAYS",
+                        startDateTime = LocalDateTime.of(2020, 1, 1, 13, 0),
+                        duration = 14400
+                    )
+                )
+            )
+        }
+
+        fun createUserWorkingSchedule(user: User, schedule: Schedule): UserWorkingSchedule {
+            return UserWorkingSchedule(
+                user = user,
+                schedule = schedule
+            )
+        }
+
+        fun createSchedule(): Schedule {
+            return Schedule(
+                type = ScheduleType.DAILY,
+                startDateTime = ZonedDateTime.of(LocalDateTime.of(2020, 1, 1, 13, 0), ZoneId.of("UTC")),
+                duration = 14400,
+                isRepeatable = true
             )
         }
     }

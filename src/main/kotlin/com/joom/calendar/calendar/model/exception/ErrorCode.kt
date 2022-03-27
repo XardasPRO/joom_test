@@ -3,6 +3,9 @@ package com.joom.calendar.calendar.model.exception
 enum class ErrorCode (
     val code: Int
 ) {
+    OK(200),
+    FORBIDDEN(403),
+
     AUTH_EMPTY_COOKIES (1000),
     AUTH_COOKIE_IS_NOT_EXIST(1001),
     AUTH_TOKEN_IS_EXPIRED(1002),

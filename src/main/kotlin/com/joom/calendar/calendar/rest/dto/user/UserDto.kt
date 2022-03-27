@@ -5,6 +5,7 @@ import java.util.UUID
 class UserDto(
     val id: UUID?,
     val login: String,
-    val name: String?
+    val name: String?,
+    val zoneOffset: String
 ) {
 }

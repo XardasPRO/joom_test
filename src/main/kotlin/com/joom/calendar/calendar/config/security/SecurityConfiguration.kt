@@ -26,6 +26,7 @@ class SecurityConfiguration(
                 .antMatchers("/login").permitAll()
                 .antMatchers("/test").authenticated()
                 ?.antMatchers("/user/create")?.hasAuthority("admin")
+                ?.antMatchers("/user/update_schedule")?.hasAnyAuthority("admin", "user")
 //                ?.antMatchers("/calendar")?.hasAnyRole("admin", "user")
 
             it.sessionManagement()?.sessionCreationPolicy(SessionCreationPolicy.NEVER)

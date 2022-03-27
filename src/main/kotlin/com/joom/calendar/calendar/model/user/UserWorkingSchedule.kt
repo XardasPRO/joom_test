@@ -1,17 +1,17 @@
 package com.joom.calendar.calendar.model.user
 
 import com.joom.calendar.calendar.model.BaseEntity
-import java.util.UUID
+import com.joom.calendar.calendar.model.schedule.Schedule
+import java.util.*
 import javax.persistence.Entity
 import javax.persistence.OneToOne
-import javax.persistence.Table
 
 @Entity
-@Table(name = "user_authorities")
-class UserAuthority(
+class UserWorkingSchedule(
     id: UUID = UUID.randomUUID(),
     @OneToOne
     val user: User,
-    val authority: String
-) : BaseEntity() {
+    @OneToOne
+    val schedule: Schedule
+) : BaseEntity(id) {
 }
