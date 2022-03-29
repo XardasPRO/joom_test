@@ -2,6 +2,8 @@ server:
   port: 8080
 calendar:
   max-working-period-duration: 86400
+  max-meeting-duration: 86400
+  meeting-schedule-items-limit: 20
 spring:
   security:
     token-lifetime: 86400

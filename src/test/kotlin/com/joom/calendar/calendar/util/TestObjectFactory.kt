@@ -1,10 +1,13 @@
 package com.joom.calendar.calendar.util
 
+import com.joom.calendar.calendar.domain.meeting.Meeting
+import com.joom.calendar.calendar.domain.meeting.MeetingMember
 import com.joom.calendar.calendar.model.schedule.Schedule
 import com.joom.calendar.calendar.model.schedule.ScheduleType
 import com.joom.calendar.calendar.model.user.User
 import com.joom.calendar.calendar.model.user.UserAuthority
 import com.joom.calendar.calendar.model.user.UserWorkingSchedule
+import com.joom.calendar.calendar.rest.dto.request.CreateMeetingRequest
 import com.joom.calendar.calendar.rest.dto.request.CreateUserRequest
 import com.joom.calendar.calendar.rest.dto.request.UpdateUserScheduleRequest
 import com.joom.calendar.calendar.rest.dto.schedule.ScheduleDto
@@ -54,7 +57,7 @@ class TestObjectFactory {
         fun createScheduleDto(): ScheduleDto {
             return ScheduleDto(
                 type = "DATE",
-                startDateTime = LocalDateTime.now(),
+                startDateTime = LocalDateTime.of(2020, 1, 1, 8, 0),
                 duration = 3600,
                 false
             )
@@ -92,6 +95,45 @@ class TestObjectFactory {
                 startDateTime = ZonedDateTime.of(LocalDateTime.of(2020, 1, 1, 13, 0), ZoneId.of("UTC")),
                 duration = 14400,
                 isRepeatable = true
+            )
+        }
+
+        fun createCreateMeetingRequest(): CreateMeetingRequest {
+            return CreateMeetingRequest(
+                isPrivate = false,
+                name = "Test meeting name",
+                description = "Test meeting description",
+                schedule = setOf(
+                    createScheduleDto().copy(type = "MONDAY"),
+                    createScheduleDto().copy(duration = 1400)
+                ),
+                members = setOf(
+                    UUID.randomUUID(),
+                    UUID.randomUUID(),
+                    UUID.randomUUID()
+                )
+            )
+        }
+
+        fun createMeeting(): Meeting {
+            return Meeting(
+                id = UUID.randomUUID(),
+                isPrivate = false,
+                name = "test meeting",
+                description = "test description",
+                owner = createUser(),
+                schedule = setOf(createSchedule()),
+                members = setOf()
+            )
+        }
+
+        fun createMeetingMember(meeting: Meeting): MeetingMember {
+            return MeetingMember(
+                id = UUID.randomUUID(),
+                user = createUser(),
+                meeting = meeting,
+                isConfirmed = false,
+                isCanceled = false
             )
         }
     }

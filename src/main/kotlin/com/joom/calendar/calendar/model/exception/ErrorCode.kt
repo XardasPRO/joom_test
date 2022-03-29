@@ -18,4 +18,5 @@ enum class ErrorCode (
 
 
     USER_IS_NOT_FOUND(3000),
+    MEETING_IS_NOT_FOUND(3001)
 }

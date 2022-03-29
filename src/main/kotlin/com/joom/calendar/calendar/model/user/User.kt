@@ -19,7 +19,7 @@ class User(
     @OneToMany(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
     val authorities: Set<UserAuthority> = emptySet(),
-    @OneToMany(fetch = FetchType.EAGER)
+    @OneToMany(fetch = FetchType.LAZY)
     @JoinTable(
         name = "user_working_schedule",
         joinColumns = [JoinColumn(name = "user_id")],

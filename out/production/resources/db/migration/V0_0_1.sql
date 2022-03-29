@@ -42,6 +42,40 @@ create table user_working_schedule
     unique (user_id, schedule_id)
 );
 
+create table meeting
+(
+    id uuid not null,
+    is_private bool not null default false,
+    name varchar(200) not null,
+    description varchar,
+    owner_id uuid not null,
+    primary key (id),
+    foreign key (owner_id) references users(id)
+);
+
+create table meeting_schedule
+(
+    id uuid not null,
+    meeting_id uuid not null,
+    schedule_id uuid not null,
+    primary key (id),
+    foreign key (meeting_id) references meeting(id),
+    foreign key (schedule_id) references schedule(id),
+    unique (meeting_id, schedule_id)
+);
+
+create table meeting_member
+(
+    id uuid not null,
+    user_id uuid not null,
+    meeting_id uuid not null,
+    is_confirmed bool not null default false,
+    is_canceled bool not null default false,
+    primary key (id),
+    foreign key (user_id) references users(id),
+    foreign key (meeting_id) references meeting(id),
+    unique (user_id, meeting_id)
+);
 
 -- mocks
 -- "password": "adminPassword"

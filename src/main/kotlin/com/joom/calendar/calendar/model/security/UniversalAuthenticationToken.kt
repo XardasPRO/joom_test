@@ -11,7 +11,7 @@ class UniversalAuthenticationToken(
     authorities
 ) {
     override fun getCredentials(): Any {
-        TODO("Not yet implemented")
+        return user.password
     }
 
     override fun getPrincipal(): Any {

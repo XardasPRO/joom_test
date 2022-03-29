@@ -6,6 +6,7 @@ class UserDto(
     val id: UUID?,
     val login: String,
     val name: String?,
+    val surname: String?,
     val zoneOffset: String
 ) {
 }
