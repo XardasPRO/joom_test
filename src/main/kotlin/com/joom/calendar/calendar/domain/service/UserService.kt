@@ -4,6 +4,7 @@ import com.joom.calendar.calendar.domain.security.JwtTokenUtils
 import com.joom.calendar.calendar.domain.validator.UserValidator
 import com.joom.calendar.calendar.model.exception.AuthorizeException
 import com.joom.calendar.calendar.model.exception.ErrorCode
+import com.joom.calendar.calendar.model.mapper.EntityMapper
 import com.joom.calendar.calendar.model.schedule.Schedule
 import com.joom.calendar.calendar.model.user.User
 import com.joom.calendar.calendar.model.user.UserAuthority
@@ -15,7 +16,6 @@ import com.joom.calendar.calendar.repository.UserWorkingScheduleRepository
 import com.joom.calendar.calendar.rest.dto.request.AuthRequest
 import com.joom.calendar.calendar.rest.dto.request.CreateUserRequest
 import com.joom.calendar.calendar.rest.dto.request.UpdateUserScheduleRequest
-import com.joom.calendar.calendar.rest.utils.EntityMapper
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service

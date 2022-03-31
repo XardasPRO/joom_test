@@ -4,6 +4,7 @@ import com.joom.calendar.calendar.domain.meeting.Meeting
 import com.joom.calendar.calendar.domain.meeting.MeetingMember
 import com.joom.calendar.calendar.domain.meeting.MeetingSchedule
 import com.joom.calendar.calendar.domain.validator.MeetingValidator
+import com.joom.calendar.calendar.model.mapper.EntityMapper
 import com.joom.calendar.calendar.model.notification.Notification
 import com.joom.calendar.calendar.model.schedule.Schedule
 import com.joom.calendar.calendar.model.user.User
@@ -14,7 +15,6 @@ import com.joom.calendar.calendar.repository.ScheduleRepository
 import com.joom.calendar.calendar.rest.dto.meeting.MeetingDto
 import com.joom.calendar.calendar.rest.dto.request.CreateMeetingRequest
 import com.joom.calendar.calendar.rest.dto.schedule.ScheduleDto
-import com.joom.calendar.calendar.rest.utils.EntityMapper
 import org.springframework.stereotype.Service
 import java.time.LocalDateTime
 import java.util.*
