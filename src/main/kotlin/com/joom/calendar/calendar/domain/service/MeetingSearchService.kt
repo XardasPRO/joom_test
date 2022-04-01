@@ -1,6 +1,7 @@
 package com.joom.calendar.calendar.domain.service
 
 import com.joom.calendar.calendar.domain.meeting.Meeting
+import com.joom.calendar.calendar.domain.validator.MeetingSearchValidator
 import com.joom.calendar.calendar.model.exception.BusinessException
 import com.joom.calendar.calendar.model.exception.ErrorCode
 import com.joom.calendar.calendar.model.mapper.EntityMapper
@@ -9,6 +10,7 @@ import com.joom.calendar.calendar.model.schedule.ScheduleType
 import com.joom.calendar.calendar.repository.MeetingRepository
 import com.joom.calendar.calendar.repository.UserRepository
 import com.joom.calendar.calendar.rest.dto.response.MeetingsResponse
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 import java.time.*
 import java.util.*
@@ -17,37 +19,24 @@ import java.util.*
 class MeetingSearchService(
     private val contextService: ContextService,
     private val userRepository: UserRepository,
-    private val meetingRepository: MeetingRepository
+    private val meetingRepository: MeetingRepository,
+    private val meetingSearchValidator: MeetingSearchValidator
 ) {
 
+    @Value("\${calendar.search-limit-days}")
     val searchLimitDays = 30L
-    val isCheckWorkTimeLimit = true
 
     fun findFirstAvailableInterval(userIds: Set<UUID>, meetingDelay: Long): ZonedDateTime {
         val authorisedUser = contextService.getAuthorisedUser()
+        val users = meetingSearchValidator.validateFindFirstAvailableIntervalRequest(userIds, meetingDelay)
 
         val startSearch = ZonedDateTime.now()
         val endSearch = startSearch.plusDays(searchLimitDays)
 
         var checkingTime = startSearch
-        val users = userRepository.findAllById(userIds)
         val usersMeetings =
             users.associateWith { meetingRepository.findAllByUserIdAndRange(it.id, startSearch, endSearch) }
         while (checkingTime.isBefore(endSearch)) {
-            //0 check max work duration
-            if (isCheckWorkTimeLimit) {
-                for (user in users) {
-                    var isHaveInterval = false
-                    user.schedule.forEach { if (it.duration >= meetingDelay) isHaveInterval = true }
-                    if (user.schedule.isNotEmpty() && !isHaveInterval) {
-                        throw BusinessException(
-                            "User ${user.id} don't have working interval for meeting with duration $meetingDelay sec",
-                            ErrorCode.USERS_DO_NOT_HAVE_TIME_FOR_MEETING
-                        )
-                    }
-                }
-            }
-
             //1 check user working time
             var isUsersHaveWorkingTimeAtPeriod = true
             var isUsersHaveFreeTimeAtPeriod = true
@@ -89,11 +78,15 @@ class MeetingSearchService(
                                     .withSecond(meetingStart.second)
                                     .withNano(0)
                                     .plusSeconds(schedule.duration)
-                                if (checkingTime.withNano(0) == newCheckingTime || newCheckingTime.isBefore(checkingTime)) {
-                                    checkingTime = newCheckingTime.plusDays(1)
-                                } else {
-                                    checkingTime = newCheckingTime
-                                }
+                                checkingTime =
+                                    if (checkingTime.withNano(0) == newCheckingTime || newCheckingTime.isBefore(
+                                            checkingTime
+                                        )
+                                    ) {
+                                        newCheckingTime.plusDays(1)
+                                    } else {
+                                        newCheckingTime
+                                    }
                                 isUsersHaveFreeTimeAtPeriod = false
                                 break
                             }
@@ -137,7 +130,7 @@ class MeetingSearchService(
 
 
     fun findUserMeetingsInRange(userId: UUID, from: LocalDateTime, to: LocalDateTime): MeetingsResponse {
-        //todo validate request
+        meetingSearchValidator.validateFindUserMeetingsRequest(userId, from, to)
         val authorisedUser = contextService.getAuthorisedUser()
         val searchFromUTC = convertDateTimeToUTC(from, authorisedUser.zoneOffset)
         val searchToUTC = convertDateTimeToUTC(to, authorisedUser.zoneOffset)

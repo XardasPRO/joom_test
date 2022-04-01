@@ -7,8 +7,10 @@ import com.joom.calendar.calendar.repository.UserRepository
 import com.joom.calendar.calendar.rest.dto.request.CreateUserRequest
 import com.joom.calendar.calendar.rest.dto.request.UpdateUserScheduleRequest
 import com.joom.calendar.calendar.util.TestObjectFactory
+import io.mockk.clearAllMocks
 import io.mockk.every
 import io.mockk.mockk
+import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.params.ParameterizedTest
@@ -119,6 +121,11 @@ internal class UserValidatorTest() {
             )
         )
         every { userRepository.findById(emptyUserId) }.returns(Optional.empty())
+    }
+
+    @AfterEach
+    fun clear() {
+        clearAllMocks()
     }
 
     @ParameterizedTest

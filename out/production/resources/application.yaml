@@ -1,6 +1,8 @@
 server:
   port: 8080
 calendar:
+  search-limit-days: 30
+  check-work-time-limit: true
   max-working-period-duration: 86400
   max-meeting-duration: 86400
   meeting-schedule-items-limit: 20
